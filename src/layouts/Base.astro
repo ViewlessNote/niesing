@@ -1,0 +1,87 @@
+---
+import '@fontsource/jost/300.css';
+import '@fontsource/jost/500.css';
+import '@fontsource/jost/600.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '../styles/global.css';
+import { Image } from 'astro:assets';
+import logo from '../assets/img/logo.png';
+import { firma } from '../data/site';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+const {
+  title,
+  description = 'H.H. Niesing GmbH aus Gronau-Epe: Präzisionsdreh- und Frästeile, Lohnfertigung, Maschinen- und Vorrichtungsbau sowie Webblätter.',
+} = Astro.props;
+const path = Astro.url.pathname;
+const nav = [
+  { href: '/', label: 'Start' },
+  { href: '/kontakt/', label: 'Kontakt' },
+];
+const canonical = new URL(path, Astro.site);
+---
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title} – {firma.name}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.jpg" type="image/jpeg" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+  </head>
+  <body id="top">
+    <a class="skip" href="#inhalt">Zum Inhalt springen</a>
+
+    <header class="site-header">
+      <div class="container header-inner">
+        <a href="/" class="logo" aria-label="Zur Startseite">
+          <Image src={logo} alt="niesing Zerspanung GmbH" width={120} height={49} loading="eager" />
+        </a>
+        <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Menü öffnen" />
+        <label for="nav-toggle" class="nav-burger" aria-hidden="true"><span></span></label>
+        <nav aria-label="Hauptmenü">
+          <ul>
+            {nav.map((n) => (
+              <li>
+                <a href={n.href} aria-current={path === n.href ? 'page' : undefined}>{n.label}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="inhalt">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-top">
+        <ul class="footer-links">
+          <li><a href="/impressum/">Impressum</a></li>
+          <li><a href="/datenschutz/">Datenschutz</a></li>
+        </ul>
+        <a href="/" class="footer-logo" aria-label="Zur Startseite">
+          <Image src={logo} alt="niesing Zerspanung GmbH" width={160} height={65} />
+        </a>
+        <p class="copy">© {new Date().getFullYear()}</p>
+      </div>
+      <div class="footer-bottom">
+        <address class="container">
+          <span>{firma.name}</span>
+          <span>{firma.strasse}</span>
+          <span>{firma.plz} {firma.ort} ({firma.land})</span>
+          <a href={firma.telefonHref}>{firma.telefon}</a>
+          <a href={`mailto:${firma.email}`}>{firma.email}</a>
+        </address>
+      </div>
+      <a href="#top" class="to-top" aria-label="Nach oben scrollen">↑</a>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,110 @@
+---
+import Base from '../layouts/Base.astro';
+import { Image } from 'astro:assets';
+import hero from '../assets/img/hero.jpg';
+import zerspanung from '../assets/img/zerspanung.jpg';
+import maschinenbau from '../assets/img/maschinenbau.jpg';
+import webblaetter from '../assets/img/webblaetter.jpg';
+import soforthilfe from '../assets/img/soforthilfe.jpg';
+import planung from '../assets/img/planung.jpg';
+import service from '../assets/img/service.jpg';
+import moeglichkeiten from '../assets/img/moeglichkeiten.jpg';
+import international from '../assets/img/international.jpg';
+
+const leistungen = [
+  { img: zerspanung, title: 'Zerspanung und Lohnfertigung', text: 'Zu unserer Kernkompetenz gehört das professionelle Zerspanen in höchster Qualität sowie die Erledigung von Lohnfertigung.' },
+  { img: maschinenbau, title: 'Maschinenbau- und Vorrichtungsbau', text: 'Aufträge erledigen wir stets mit höchster Kundenzufriedenheit.' },
+  { img: webblaetter, title: 'Webblätter und benadeltes Maschinenzubehör', text: 'Für Ihren Webereibedarf stellen wir hochwertige Webblätter auf Kundenwunsch her.' },
+  { img: soforthilfe, title: 'Soforthilfe bei Maschinenstillstand', text: 'Wir leisten Ad-hoc-Lösungen bei Maschinenstillstand und liefern Ihnen Sofort-Hilfe.' },
+  { img: planung, title: 'Planung und Beratung', text: 'Bei der Planung von Maschinen und Maschinenteilen stehen wir Ihnen stets beratend zur Seite, um für Sie eine optimale Lösung zu finden.' },
+  { img: service, title: 'Service und Montage', text: 'Die Montage von Ersatzteilen gehört ebenso wie Serviceleistungen zu unseren professionellen Leistungen.' },
+];
+
+const features = [
+  { img: zerspanung, title: 'Unsere Maschinen', text: 'Wir setzen Maschinen der Firmen DMG und Boehringer ein. Erfahren Sie mehr über unsere eingesetzten Maschinen, deren Spezifikationen und vielfältigen Einsatzmöglichkeiten.' },
+  { img: moeglichkeiten, title: 'Unsere Möglichkeiten', text: 'Unsere Maschinen erlauben es uns, individuelle Kundenwünsche umzusetzen. Lassen Sie sich persönlich von uns beraten!' },
+  { img: international, title: 'Wir arbeiten international mit Firmen zusammen', text: 'Wir sind breit aufgestellt und wickeln auch Projekte für unsere internationalen Kunden ab. Gerne können Sie für ein persönliches Gespräch Kontakt mit uns aufnehmen. Unser kompetentes Personal unterstützt Sie bei Ihrem Vorhaben.' },
+];
+---
+<Base title="Start">
+  <section class="hero">
+    <Image src={hero} alt="" widths={[800, 1400, 1920]} sizes="100vw" loading="eager" fetchpriority="high" />
+    <div class="hero-text">
+      <div class="container">
+        <h1>Präzisionsdreh- und Frästeile</h1>
+        <p class="hero-sub">H.H. Niesing GmbH</p>
+        <p class="hero-tag">Webblätter</p>
+        <a href="/kontakt/" class="btn btn-green">Kontakt</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">Unsere Leistungen</h2>
+      <div class="services">
+        {leistungen.map((l) => (
+          <article class="service">
+            <Image src={l.img} alt="" widths={[400, 700]} sizes="(max-width: 560px) 100vw, (max-width: 900px) 50vw, 360px" />
+            <h3>{l.title}</h3>
+            <p>{l.text}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="about">
+    <div class="container about-inner">
+      <div>
+        <h2>Wer wir sind</h2>
+        <p class="sub">und was wir bieten</p>
+      </div>
+      <p>
+        Die Firma H.H. Niesing GmbH ist ein mittelständisches Familienunternehmen im münsterländischen
+        Gronau-Epe. Wir sind spezialisiert auf die Einzel- und Kleinserienfertigung in den Bereichen
+        Metallverarbeitung sowie der klassischen Lohnfertigung und dem Webereibedarf. Wir sind ein flexibler,
+        zuverlässiger und präziser Partner! Mit unseren Systemlieferanten sind wir in der Lage, Ihnen komplette
+        Lösungen in kürzester Produktionszeit aus einer Hand zu bieten.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      {features.map((f, i) => (
+        <div class:list={['feature', { reverse: i % 2 === 1 }]}>
+          <div>
+            <h2>{f.title}</h2>
+            <p>{f.text}</p>
+            <a href="/kontakt/" class="btn btn-outline">Mehr erfahren</a>
+          </div>
+          <div class="feature-media">
+            <Image src={f.img} alt="" widths={[500, 900]} sizes="(max-width: 900px) 100vw, 520px" />
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="quote">
+    <div class="container">
+      <blockquote>
+        <p>„Wenn alle gemeinsam vorankommen, dann stellt sich der Erfolg von selbst ein.“</p>
+        <cite>Henry Ford, amerikanischer Industrieller und Gründer der Ford Motor Company</cite>
+      </blockquote>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="container">
+      <h2>Sie haben Fragen?</h2>
+      <p>
+        Bereits seit Jahrzehnten vertrauen uns unsere Kunden. Überzeugen auch Sie sich von unserer
+        Leistungsfähigkeit. Nehmen Sie mit uns Kontakt auf und vereinbaren Sie einen unverbindlichen Termin für
+        ein persönliches Gespräch. Überzeugen Sie sich dabei direkt von unserer Qualität.
+      </p>
+      <a href="/kontakt/" class="btn btn-green">Sprechen Sie mit uns!</a>
+    </div>
+  </section>
+</Base>

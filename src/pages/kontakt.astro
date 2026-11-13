@@ -1,0 +1,43 @@
+---
+import Base from '../layouts/Base.astro';
+import { firma } from '../data/site';
+---
+<Base title="Kontakt" description="Kontakt zur H.H. Niesing GmbH in Gronau-Epe – Telefon, E-Mail und Anschrift.">
+  <div class="container">
+    <section class="contact-wrap">
+      <div class="contact-card">
+        <h1>Kontakt</h1>
+
+        <div class="contact-item">
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="2.5" width="14" height="19" rx="1"/><path d="M9 6.5h1.5M13.5 6.5H15M9 10h1.5M13.5 10H15M9 13.5h1.5M13.5 13.5H15M10 21.5v-4h4v4"/></svg>
+          </span>
+          <div>
+            <h2>Anschrift</h2>
+            <p>{firma.strasse}<br />{firma.plz} {firma.ort}, {firma.land}</p>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 3.5h3.5l1.5 4-2 1.5a11 11 0 0 0 6 6l1.5-2 4 1.5V18a2 2 0 0 1-2 2A15.5 15.5 0 0 1 3 5.5a2 2 0 0 1 2-2z"/></svg>
+          </span>
+          <div>
+            <h2>Telefon</h2>
+            <a href={firma.telefonHref}>{firma.telefon}</a>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="m3.5 6 8.5 7 8.5-7"/></svg>
+          </span>
+          <div>
+            <h2>E-Mail</h2>
+            <a href={`mailto:${firma.email}`}>{firma.email}</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</Base>
