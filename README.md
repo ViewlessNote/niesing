@@ -12,6 +12,9 @@ Statische Website der H.H. Niesing GmbH (Ersatz für die bisherige WordPress-Sei
 
 ## Inhalte ändern
 - Texte: `src/pages/*.astro`
+- Leistungen (Startseiten-Kacheln + Unterseiten `/leistungen/…/`): `src/data/leistungen.ts`
+- Maschinenpark (Maschinen, Kennwerte, Möglichkeiten): `src/data/maschinen.ts`
+- Neue Seite? Zusätzlich in `src/pages/sitemap.xml.ts` eintragen.
 - Firmendaten (Adresse, Telefon, E-Mail): `src/data/site.ts`
 - Bilder: `src/assets/img/`
 - Farben/Layout: `src/styles/global.css`
@@ -25,3 +28,6 @@ Alte WordPress-URLs (/contact/, /elementor-3488/, /elementor-3475/) werden per 3
 ## Vor dem Livegang offen
 - Impressum: Handelsregister-Nr., Registergericht und USt-IdNr. sind Platzhalter von der alten Seite.
 - Datenschutz: Hosting-Anbieter eintragen; Text rechtlich prüfen lassen.
+- Maschinenpark: genaue Maschinentypen und Kennwerte in `src/data/maschinen.ts` eintragen (fehlende Werte erscheinen live als „auf Anfrage“, in `npm run dev` gelb markiert). Werkstoffe und Toleranzen bestätigen lassen.
+- Texte der Leistungs-Unterseiten von H.H. Niesing gegenlesen lassen (z. B. „Nachfertigung ohne Zeichnung“, „Reparatur“).
+- Nach dem Livegang: Domain in der Google Search Console anmelden und `https://hhniesing.de/sitemap.xml` einreichen.
