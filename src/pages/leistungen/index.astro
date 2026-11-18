@@ -1,0 +1,22 @@
+---
+import Base from '../../layouts/Base.astro';
+import Leistungskarten from '../../components/Leistungskarten.astro';
+---
+<Base
+  title="Leistungen"
+  description="Leistungen der H.H. Niesing GmbH: Zerspanung, Lohnfertigung, Maschinen- und Vorrichtungsbau, Webblätter, Soforthilfe bei Maschinenstillstand, Service und Montage."
+  breadcrumb={[{ name: 'Leistungen', path: '/leistungen/' }]}
+>
+  <section class="page-head">
+    <div class="container">
+      <p class="eyebrow">Leistungen</p>
+      <h1>Was wir für Sie fertigen</h1>
+      <p class="lead">Vom einzelnen Ersatzteil bis zur Kleinserie – aus unserer Werkstatt in Gronau-Epe.</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <Leistungskarten heading="h2" />
+    </div>
+  </section>
+</Base>

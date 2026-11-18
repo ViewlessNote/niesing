@@ -1,0 +1,86 @@
+---
+import Base from '../layouts/Base.astro';
+import { Image } from 'astro:assets';
+import zerspanung from '../assets/img/zerspanung.jpg';
+import moeglichkeitenImg from '../assets/img/moeglichkeiten.jpg';
+import { maschinen, moeglichkeiten } from '../data/maschinen';
+import { anfrageLink, firma } from '../data/site';
+
+const dev = import.meta.env.DEV;
+---
+<Base
+  title="Maschinenpark"
+  description="Maschinenpark der H.H. Niesing GmbH in Gronau-Epe: Drehmaschinen von MAG Boehringer und CNC-Maschinen von DMG für Präzisionsdreh- und Frästeile."
+  breadcrumb={[{ name: 'Maschinenpark', path: '/maschinenpark/' }]}
+>
+  <section class="page-head">
+    <div class="container">
+      <p class="eyebrow">Maschinenpark</p>
+      <h1>Unsere Maschinen und Möglichkeiten</h1>
+      <p class="lead">
+        Wir fertigen auf Maschinen von DMG und Boehringer. Hier sehen Sie, was wir bearbeiten
+        können – so prüfen Sie schnell, ob Ihr Bauteil zu uns passt.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="machines">
+        {maschinen.map((m) => (
+          <article class="machine">
+            <header>
+              <p class="machine-maker">{m.hersteller}</p>
+              <h2>{m.modell ?? m.art}</h2>
+              {m.modell && <p class="machine-type">{m.art}</p>}
+            </header>
+            <p>{m.einsatz}</p>
+            <dl class="specs">
+              {m.specs.map((s) => (
+                <div>
+                  <dt>{s.label}</dt>
+                  <dd class:list={{ ph: dev && !s.value }}>{s.value ?? 'auf Anfrage'}</dd>
+                </div>
+              ))}
+            </dl>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-light" id="moeglichkeiten">
+    <div class="container feature">
+      <div>
+        <h2>Unsere Möglichkeiten</h2>
+        <dl class="specs">
+          {moeglichkeiten.map((s) => (
+            <div>
+              <dt>{s.label}</dt>
+              <dd class:list={{ ph: dev && !s.value }}>{s.value ?? 'auf Anfrage'}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+      <div class="feature-media">
+        <Image src={moeglichkeitenImg} alt="Fräsmaschine in der Werkstatt der H.H. Niesing GmbH" widths={[500, 900]} sizes="(max-width: 900px) 100vw, 520px" />
+      </div>
+    </div>
+    <div class="container feature reverse">
+      <div>
+        <h2>Passt Ihr Bauteil?</h2>
+        <p>
+          Schicken Sie uns Ihre Zeichnung oder ein Foto des Musterteils mit Stückzahl und Wunschtermin.
+          Wir melden uns mit einer Einschätzung und einem Angebot.
+        </p>
+        <p class="btn-row">
+          <a href={anfrageLink('Fertigung nach Zeichnung')} class="btn btn-green">Anfrage mit Zeichnung senden</a>
+          <a href={firma.telefonHref} class="btn btn-outline">{firma.telefon}</a>
+        </p>
+      </div>
+      <div class="feature-media">
+        <Image src={zerspanung} alt="Drehmaschine von MAG Boehringer im Maschinenpark" widths={[500, 900]} sizes="(max-width: 900px) 100vw, 520px" />
+      </div>
+    </div>
+  </section>
+</Base>

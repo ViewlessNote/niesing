@@ -1,0 +1,20 @@
+---
+import { Image } from 'astro:assets';
+import { leistungen } from '../data/leistungen';
+
+interface Props { heading?: 'h2' | 'h3' }
+const { heading = 'h3' } = Astro.props;
+const H = heading;
+---
+<div class="services">
+  {leistungen.map((l) => (
+    <article class="service">
+      <a href={`/leistungen/${l.slug}/`} class="service-link">
+        <Image src={l.img} alt={l.alt} widths={[400, 700]} sizes="(max-width: 560px) 100vw, (max-width: 900px) 50vw, 360px" />
+        <H>{l.title}</H>
+      </a>
+      <p>{l.short}</p>
+      <a href={`/leistungen/${l.slug}/`} class="more" aria-hidden="true" tabindex="-1">Mehr erfahren →</a>
+    </article>
+  ))}
+</div>

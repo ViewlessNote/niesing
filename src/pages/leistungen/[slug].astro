@@ -1,0 +1,68 @@
+---
+import Base from '../../layouts/Base.astro';
+import { Image } from 'astro:assets';
+import { leistungen, type Leistung } from '../../data/leistungen';
+import { anfrageLink, firma } from '../../data/site';
+
+export function getStaticPaths() {
+  return leistungen.map((l) => ({ params: { slug: l.slug }, props: { l } }));
+}
+
+const { l } = Astro.props as { l: Leistung };
+const andere = leistungen.filter((x) => x.slug !== l.slug);
+const notfall = l.slug === 'soforthilfe-maschinenstillstand';
+---
+<Base
+  title={l.title}
+  description={l.description}
+  image={l.img}
+  breadcrumb={[
+    { name: 'Leistungen', path: '/leistungen/' },
+    { name: l.title, path: `/leistungen/${l.slug}/` },
+  ]}
+  service={{ name: l.title, description: l.description }}
+>
+  <section class="page-head">
+    <div class="container">
+      <p class="eyebrow"><a href="/leistungen/">Leistungen</a></p>
+      <h1>{l.title}</h1>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container feature">
+      <div>
+        {l.intro.map((p) => <p class="lead">{p}</p>)}
+        <ul class="checklist">
+          {l.punkte.map((p) => <li>{p}</li>)}
+        </ul>
+        <p class="btn-row">
+          {notfall ? (
+            <>
+              <a href={firma.telefonHref} class="btn btn-green">Jetzt anrufen: {firma.telefon}</a>
+              <a href={anfrageLink(l.anfrage)} class="btn btn-outline">Fotos per E-Mail senden</a>
+            </>
+          ) : (
+            <>
+              <a href={anfrageLink(l.anfrage)} class="btn btn-green">Anfrage senden</a>
+              <a href={firma.telefonHref} class="btn btn-outline">{firma.telefon}</a>
+            </>
+          )}
+        </p>
+      </div>
+      <div class="feature-media">
+        <Image src={l.img} alt={l.alt} widths={[500, 900]} sizes="(max-width: 900px) 100vw, 520px" loading="eager" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-light">
+    <div class="container">
+      <h2 class="section-title">Weitere Leistungen</h2>
+      <ul class="link-grid">
+        {andere.map((x) => <li><a href={`/leistungen/${x.slug}/`}>{x.title}</a></li>)}
+        <li><a href="/maschinenpark/">Unser Maschinenpark</a></li>
+      </ul>
+    </div>
+  </section>
+</Base>

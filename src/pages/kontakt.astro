@@ -1,10 +1,32 @@
 ---
 import Base from '../layouts/Base.astro';
 import { firma } from '../data/site';
+
+const { lat, lon } = firma;
+const d = 0.004;
+const bbox = [lon - d * 1.4, lat - d, lon + d * 1.4, lat + d].map((n) => n.toFixed(5)).join(',');
+const osmEmbed = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat},${lon}`;
+const osmLink = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=17/${lat}/${lon}`;
+const adresse = `${firma.strasse}, ${firma.plz} ${firma.ort}`;
+const routeLink = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(adresse)}`;
 ---
 <Base title="Kontakt" description="Kontakt zur H.H. Niesing GmbH in Gronau-Epe – Telefon, E-Mail und Anschrift.">
   <div class="container">
     <section class="contact-wrap">
+      <div class="contact-map" data-src={osmEmbed}>
+        <div class="map-consent">
+          <svg class="map-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 21.5s-7-6.2-7-11.5a7 7 0 0 1 14 0c0 5.3-7 11.5-7 11.5z"/><circle cx="12" cy="10" r="2.5"/></svg>
+          <p class="map-title">Anfahrt</p>
+          <p>Beim Laden der Karte werden Daten (u.&nbsp;a. Ihre IP-Adresse) an OpenStreetMap übertragen. Mehr dazu in der <a href="/datenschutz/">Datenschutzerklärung</a>.</p>
+          <button type="button" class="btn btn-green map-load">Karte laden</button>
+          <p class="map-links">
+            <a href={osmLink} target="_blank" rel="noopener">In OpenStreetMap öffnen</a>
+            <span aria-hidden="true">·</span>
+            <a href={routeLink} target="_blank" rel="noopener">Route planen</a>
+          </p>
+        </div>
+      </div>
+
       <div class="contact-card">
         <h1>Kontakt</h1>
 
@@ -41,3 +63,16 @@ import { firma } from '../data/site';
     </section>
   </div>
 </Base>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.contact-map').forEach((map) => {
+    map.querySelector('.map-load')?.addEventListener('click', () => {
+      const iframe = document.createElement('iframe');
+      iframe.src = map.dataset.src!;
+      iframe.title = 'Karte: Standort der H.H. Niesing GmbH';
+      iframe.loading = 'lazy';
+      iframe.referrerPolicy = 'no-referrer';
+      map.replaceChildren(iframe);
+    });
+  });
+</script>

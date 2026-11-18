@@ -3,54 +3,46 @@ import Base from '../layouts/Base.astro';
 import { Image } from 'astro:assets';
 import hero from '../assets/img/hero.jpg';
 import zerspanung from '../assets/img/zerspanung.jpg';
-import maschinenbau from '../assets/img/maschinenbau.jpg';
-import webblaetter from '../assets/img/webblaetter.jpg';
-import soforthilfe from '../assets/img/soforthilfe.jpg';
-import planung from '../assets/img/planung.jpg';
-import service from '../assets/img/service.jpg';
 import moeglichkeiten from '../assets/img/moeglichkeiten.jpg';
 import international from '../assets/img/international.jpg';
-
-const leistungen = [
-  { img: zerspanung, title: 'Zerspanung und Lohnfertigung', text: 'Zu unserer Kernkompetenz gehört das professionelle Zerspanen in höchster Qualität sowie die Erledigung von Lohnfertigung.' },
-  { img: maschinenbau, title: 'Maschinenbau- und Vorrichtungsbau', text: 'Aufträge erledigen wir stets mit höchster Kundenzufriedenheit.' },
-  { img: webblaetter, title: 'Webblätter und benadeltes Maschinenzubehör', text: 'Für Ihren Webereibedarf stellen wir hochwertige Webblätter auf Kundenwunsch her.' },
-  { img: soforthilfe, title: 'Soforthilfe bei Maschinenstillstand', text: 'Wir leisten Ad-hoc-Lösungen bei Maschinenstillstand und liefern Ihnen Sofort-Hilfe.' },
-  { img: planung, title: 'Planung und Beratung', text: 'Bei der Planung von Maschinen und Maschinenteilen stehen wir Ihnen stets beratend zur Seite, um für Sie eine optimale Lösung zu finden.' },
-  { img: service, title: 'Service und Montage', text: 'Die Montage von Ersatzteilen gehört ebenso wie Serviceleistungen zu unseren professionellen Leistungen.' },
-];
+import Leistungskarten from '../components/Leistungskarten.astro';
 
 const features = [
-  { img: zerspanung, title: 'Unsere Maschinen', text: 'Wir setzen Maschinen der Firmen DMG und Boehringer ein. Erfahren Sie mehr über unsere eingesetzten Maschinen, deren Spezifikationen und vielfältigen Einsatzmöglichkeiten.' },
-  { img: moeglichkeiten, title: 'Unsere Möglichkeiten', text: 'Unsere Maschinen erlauben es uns, individuelle Kundenwünsche umzusetzen. Lassen Sie sich persönlich von uns beraten!' },
-  { img: international, title: 'Wir arbeiten international mit Firmen zusammen', text: 'Wir sind breit aufgestellt und wickeln auch Projekte für unsere internationalen Kunden ab. Gerne können Sie für ein persönliches Gespräch Kontakt mit uns aufnehmen. Unser kompetentes Personal unterstützt Sie bei Ihrem Vorhaben.' },
+  { img: international, alt: 'Blick in die Werkstatthalle mit Dreh- und Fräsmaschinen', href: '/maschinenpark/', title: 'Unsere Maschinen', text: 'Wir setzen Maschinen der Firmen DMG und Boehringer ein. Erfahren Sie mehr über unsere eingesetzten Maschinen, deren Spezifikationen und vielfältigen Einsatzmöglichkeiten.' },
+  { img: moeglichkeiten, alt: 'Fräsmaschine in der Werkstatt', href: '/maschinenpark/#moeglichkeiten', title: 'Unsere Möglichkeiten', text: 'Unsere Maschinen erlauben es uns, individuelle Kundenwünsche umzusetzen. Lassen Sie sich persönlich von uns beraten!' },
+  { img: hero, alt: 'Gedrehte Präzisionsteile aus Metall', href: '/kontakt/', title: 'Wir arbeiten international mit Firmen zusammen', text: 'Wir sind breit aufgestellt und wickeln auch Projekte für unsere internationalen Kunden ab. Gerne können Sie für ein persönliches Gespräch Kontakt mit uns aufnehmen. Unser kompetentes Personal unterstützt Sie bei Ihrem Vorhaben.' },
 ];
 ---
-<Base title="Start">
-  <section class="hero">
-    <Image src={hero} alt="" widths={[800, 1400, 1920]} sizes="100vw" loading="eager" fetchpriority="high" />
-    <div class="hero-text">
-      <div class="container">
+<Base title="Präzisionsdreh- und Frästeile aus Gronau-Epe">
+  <section class="hero-split">
+    <div class="container hero-grid">
+      <div>
+        <p class="hero-kicker">H.H. Niesing GmbH, Gronau-Epe</p>
         <h1>Präzisionsdreh- und Frästeile</h1>
-        <p class="hero-sub">H.H. Niesing GmbH</p>
-        <p class="hero-tag">Webblätter</p>
-        <a href="/kontakt/" class="btn btn-green">Kontakt</a>
+        <p class="hero-lead">Einzelteile und Kleinserien, Lohnfertigung, Maschinenbau und Webblätter – gefertigt in unserer Werkstatt im Münsterland.</p>
+        <p class="btn-row">
+          <a href="/kontakt/" class="btn btn-green">Kontakt aufnehmen</a>
+          <a href="/leistungen/" class="btn btn-outline">Leistungen ansehen</a>
+        </p>
       </div>
+      <figure class="hero-photo">
+        <Image src={zerspanung} alt="Drehmaschine von MAG Boehringer in der Werkstatt der H.H. Niesing GmbH" widths={[600, 900, 1300]} sizes="(max-width: 900px) 100vw, 600px" loading="eager" fetchpriority="high" />
+      </figure>
+    </div>
+    <div class="container">
+      <ul class="facts">
+        <li><strong>Einzelteil bis Kleinserie</strong><span>Nach Zeichnung, Skizze oder Muster</span></li>
+        <li><strong>Soforthilfe</strong><span>Schnelle Lösung bei Maschinenstillstand</span></li>
+        <li><strong>Alles aus einer Hand</strong><span>Mit unseren Systemlieferanten</span></li>
+        <li><strong>Seit Jahrzehnten</strong><span>Familienunternehmen im Münsterland</span></li>
+      </ul>
     </div>
   </section>
 
   <section class="section">
     <div class="container">
       <h2 class="section-title">Unsere Leistungen</h2>
-      <div class="services">
-        {leistungen.map((l) => (
-          <article class="service">
-            <Image src={l.img} alt="" widths={[400, 700]} sizes="(max-width: 560px) 100vw, (max-width: 900px) 50vw, 360px" />
-            <h3>{l.title}</h3>
-            <p>{l.text}</p>
-          </article>
-        ))}
-      </div>
+      <Leistungskarten />
     </div>
   </section>
 
@@ -77,10 +69,10 @@ const features = [
           <div>
             <h2>{f.title}</h2>
             <p>{f.text}</p>
-            <a href="/kontakt/" class="btn btn-outline">Mehr erfahren</a>
+            <a href={f.href} class="btn btn-outline">Mehr erfahren</a>
           </div>
           <div class="feature-media">
-            <Image src={f.img} alt="" widths={[500, 900]} sizes="(max-width: 900px) 100vw, 520px" />
+            <Image src={f.img} alt={f.alt} widths={[500, 900]} sizes="(max-width: 900px) 100vw, 520px" />
           </div>
         </div>
       ))}

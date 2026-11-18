@@ -5,33 +5,114 @@ import '@fontsource/jost/600.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '../styles/global.css';
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 import logo from '../assets/img/logo.png';
+import hero from '../assets/img/hero.jpg';
 import { firma } from '../data/site';
 
+interface Crumb { name: string; path: string }
 interface Props {
   title: string;
   description?: string;
+  /** Vorschaubild für Social Media / Messenger (Standard: Hero-Bild) */
+  image?: ImageMetadata;
+  /** Brotkrumen ohne „Start“ – erzeugt BreadcrumbList für Google */
+  breadcrumb?: Crumb[];
+  /** Für Leistungsseiten: erzeugt ein schema.org/Service */
+  service?: { name: string; description: string };
+  noindex?: boolean;
 }
 const {
   title,
   description = 'H.H. Niesing GmbH aus Gronau-Epe: Präzisionsdreh- und Frästeile, Lohnfertigung, Maschinen- und Vorrichtungsbau sowie Webblätter.',
+  image = hero,
+  breadcrumb,
+  service,
+  noindex = false,
 } = Astro.props;
 const path = Astro.url.pathname;
 const nav = [
   { href: '/', label: 'Start' },
+  { href: '/leistungen/', label: 'Leistungen' },
+  { href: '/maschinenpark/', label: 'Maschinenpark' },
   { href: '/kontakt/', label: 'Kontakt' },
 ];
-const canonical = new URL(path, Astro.site);
+const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+const site = Astro.site!;
+const canonical = new URL(path, site);
+const fullTitle = `${title} – ${firma.name}`;
+
+const og = await getImage({ src: image, width: 1200, format: 'jpg' });
+const ogUrl = new URL(og.src, site).href;
+const logoImg = await getImage({ src: logo, width: 250, format: 'png' });
+
+const orgId = new URL('/#organisation', site).href;
+const graph: Record<string, unknown>[] = [
+  {
+    '@type': 'LocalBusiness',
+    '@id': orgId,
+    name: firma.name,
+    url: new URL('/', site).href,
+    logo: new URL(logoImg.src, site).href,
+    image: new URL((await getImage({ src: hero, width: 1200, format: 'jpg' })).src, site).href,
+    telephone: firma.telefon,
+    email: firma.email,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: firma.strasse,
+      postalCode: firma.plz,
+      addressLocality: firma.ort,
+      addressCountry: 'DE',
+    },
+    areaServed: ['DE', 'EU'],
+    description: 'Einzel- und Kleinserienfertigung: Präzisionsdreh- und Frästeile, Lohnfertigung, Maschinen- und Vorrichtungsbau, Webblätter und Soforthilfe bei Maschinenstillstand.',
+  },
+];
+if (breadcrumb?.length) {
+  graph.push({
+    '@type': 'BreadcrumbList',
+    itemListElement: [{ name: 'Start', path: '/' }, ...breadcrumb].map((c, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: c.name,
+      item: new URL(c.path, site).href,
+    })),
+  });
+}
+if (service) {
+  graph.push({
+    '@type': 'Service',
+    name: service.name,
+    description: service.description,
+    url: canonical.href,
+    provider: { '@id': orgId },
+    areaServed: ['DE', 'EU'],
+  });
+}
+// "<" escapen, damit der JSON-Block das <script>-Tag nicht beenden kann
+const jsonLd = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }).replace(/</g, '\\u003c');
 ---
 <!doctype html>
 <html lang="de">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title} – {firma.name}</title>
+    <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:site_name" content={firma.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogUrl} />
+    <meta property="og:image:width" content={String(og.attributes.width ?? 1200)} />
+    <meta property="og:image:height" content={String(og.attributes.height ?? '')} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json" is:inline set:html={jsonLd} />
     <link rel="icon" href="/favicon.jpg" type="image/jpeg" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
   </head>
@@ -41,7 +122,7 @@ const canonical = new URL(path, Astro.site);
     <header class="site-header">
       <div class="container header-inner">
         <a href="/" class="logo" aria-label="Zur Startseite">
-          <Image src={logo} alt="niesing Zerspanung GmbH" width={120} height={49} loading="eager" />
+          <Image src={logo} alt="H.H. Niesing GmbH" width={120} height={49} loading="eager" />
         </a>
         <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Menü öffnen" />
         <label for="nav-toggle" class="nav-burger" aria-hidden="true"><span></span></label>
@@ -49,9 +130,15 @@ const canonical = new URL(path, Astro.site);
           <ul>
             {nav.map((n) => (
               <li>
-                <a href={n.href} aria-current={path === n.href ? 'page' : undefined}>{n.label}</a>
+                <a href={n.href} aria-current={isCurrent(n.href) ? 'page' : undefined}>{n.label}</a>
               </li>
             ))}
+            <li class="nav-cta">
+              <a href={firma.telefonHref} class="btn btn-green">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 3.5h3.5l1.5 4-2 1.5a11 11 0 0 0 6 6l1.5-2 4 1.5V18a2 2 0 0 1-2 2A15.5 15.5 0 0 1 3 5.5a2 2 0 0 1 2-2z"/></svg>
+                {firma.telefon}
+              </a>
+            </li>
           </ul>
         </nav>
       </div>
@@ -68,7 +155,7 @@ const canonical = new URL(path, Astro.site);
           <li><a href="/datenschutz/">Datenschutz</a></li>
         </ul>
         <a href="/" class="footer-logo" aria-label="Zur Startseite">
-          <Image src={logo} alt="niesing Zerspanung GmbH" width={160} height={65} />
+          <Image src={logo} alt="H.H. Niesing GmbH" width={160} height={65} />
         </a>
         <p class="copy">© {new Date().getFullYear()}</p>
       </div>
